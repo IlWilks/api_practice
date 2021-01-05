@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { normalizeData } from "./format";
 
 const options = {
   method: 'GET',
@@ -10,20 +11,36 @@ const options = {
   }
 };
 
-const PokeChart = () => {
-
+const PokeChart = (name) => {
+  const [choice, setChoice] = useState([])
   useEffect(()=> {
-axios
-.request(options)
-.then(function (response) {
-	console.log(response.data);
-}).catch(function (error) {
-	console.error(error);
-});
+    getMons();
 }, [])
 
+const getMons = async () => {
+  await axios
+  .request(options)
+  .then(function (response) {
+    let x = normalizeData(response.data, name);
+    setChoice(x);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
+};
+
+
 return (
-  <div>Pokemon</div>
+  <>
+    <div>Pokemon</div>
+    <p1>Name: {choice[0]}</p1>
+    <br/>
+    <p1>Attack: {choice[1]}</p1>
+    <br/>
+    <p1>Defense: {choice[2]}</p1>
+    <br/>
+    <p1>Stamina: {choice[3]}</p1>
+  </>
 )
 }
 
